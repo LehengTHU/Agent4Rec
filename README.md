@@ -94,7 +94,7 @@ You can choose the employed recommender by modifying `--modeltype <model_name>` 
 - `Random`: Randomly recommend items to users.  
 - `Pop`: Randomly recommend popular items to users.  
 - `MF`: Pretrained [Matrix Factorization](https://ieeexplore.ieee.org/abstract/document/5197422) model with BPR loss.  
-- `MultiVAE`: Pretrained [MultiVAE](https://arxiv.org/abs/1802.05814) model with BPR loss.
+- `MultVAE`: Pretrained [MultVAE](https://arxiv.org/abs/1802.05814) model with BPR loss.
 - `LightGCN`: Pretrained [LightGCN](https://arxiv.org/abs/2002.02126) model with BPR loss.  
 
 <!-- <p id="Explore-Various-Recommenders"></p> 

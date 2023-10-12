@@ -69,8 +69,8 @@ def parse_args():
         parser.add_argument('--tau', type=float, default=0.1,
                         help='temperature parameter')
     
-    # MultiVAE
-    if(args.modeltype == 'MultiVAE'):
+    # MultVAE
+    if(args.modeltype == 'MultVAE'):
         parser.add_argument('--total_anneal_steps', type=int, default=200000,
                         help='total anneal steps')
         parser.add_argument('--anneal_cap', type=float, default=0.2,
