@@ -257,7 +257,7 @@ def save_grad(name):
 
 def fix_seeds(seed=101):
 	random.seed(seed)
-	os.environ['PYTHONHASHSEED'] = str(seed) # 为了禁止hash随机化，使得实验可复现
+	os.environ['PYTHONHASHSEED'] = str(seed) # In order to disable hash randomization and make the experiment reproducible.
 	np.random.seed(seed)
 	torch.manual_seed(seed)
 	torch.cuda.manual_seed(seed)
@@ -272,7 +272,7 @@ def uniform_loss(x, t=2):
     return torch.pdist(x, p=2).pow(2).mul(-t).exp().mean().log()
 
 def visualize_and_save_log(file_dir, dataset_name, show=False):
-    # 逐行读取file_dir文件, 只保留
+    # Read file_dir line by line and keep only
     if(dataset_name == "tencent_synthetic"):
         pass
     else:
@@ -291,9 +291,9 @@ def visualize_and_save_log(file_dir, dataset_name, show=False):
 
         epochs = list(range(0, len(valid_recall)))
         epochs = [i*5 for i in epochs]
-        # 定义表格
+        # Define table.
         result = pd.DataFrame({'epochs': epochs, 'valid_recall': valid_recall, 'test_recall': test_recall, 'valid_ndcg': valid_ndcg, 'test_ndcg': test_ndcg})
-        # df是除了最后一行的所有行
+        # df is all rows except the last one.
         df = result.iloc[:-1, :]
 
         fig=plt.figure()
@@ -301,12 +301,12 @@ def visualize_and_save_log(file_dir, dataset_name, show=False):
         y1 = df.valid_recall
         y2 = df.test_recall
         print(max(y1), max(y2), 1.1*max(y1), 1.1*max(y2))
-        #ax1显示y1  ,ax2显示y2 
+        # ax1 displays y1, ax2 displays y2.
         ax1=fig.subplots()
-        ax2=ax1.twinx()    #使用twinx()，得到与ax1 对称的ax2,共用一个x轴，y轴对称（坐标不对称）
+        ax2=ax1.twinx()    # Using twinx(), get ax2 symmetric to ax1, sharing the same x-axis but with asymmetric y-axis coordinates.
         ax1.plot(x,y1,'g-', label='valid_recall')
         ax2.plot(x,y2,'b--', label='test_recall')
-        # 坐标轴范围
+        # Coordinate axis range
         ax1.set_ylim(min(y1), 1.15*(max(y1)-min(y1))+min(y1))
         ax2.set_ylim(min(y2), 1.15*(max(y2)-min(y2))+min(y2))
 

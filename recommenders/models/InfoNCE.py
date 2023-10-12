@@ -100,9 +100,9 @@ class InfoNCE_batch(AbstractModel):
         ratings = torch.matmul(users_emb, torch.transpose(pos_emb, 0, 1))
         ratings_diag = torch.diag(ratings)
         
-        #分子
+        # Molecule
         numerator = torch.exp(ratings_diag / self.tau)
-        #分母
+        # Denominator
         denominator = torch.sum(torch.exp(ratings / self.tau), dim = 1)
         ssm_loss = torch.mean(torch.negative(torch.log(numerator/denominator)))
 

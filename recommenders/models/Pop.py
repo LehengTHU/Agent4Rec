@@ -31,7 +31,7 @@ class Pop(AbstractModel):
 
         rating_matrix = np.zeros((len(users), len(items)))
         for i, user in enumerate(users):
-            random_idx = np.random.choice(self.data.pop_candidates, 2*self.args.Ks, replace=False) # 每次从pop_candidates中选取20个item
+            random_idx = np.random.choice(self.data.pop_candidates, 2*self.args.Ks, replace=False) # Select 20 items from pop_candidates each time.
             # print(sorted(random_idx))
             rating_matrix[i, random_idx] = 1
         # print(rating_matrix.sum())
@@ -48,14 +48,14 @@ class Pop_Data(Data):
         self.pop_candidates = [x[0] for x in sorted_items[:30*args.Ks]]
         print("pop_candidates: ", sorted(self.pop_candidates))
         # pop_matrix = np.zeros((1, self.n_items))
-        # # 随机从pop_candidates中选取20个item
+        # Randomly select 20 items from pop_candidates.
         # rating_matrix = np.zeros((self.n_users, self.n_items))
         # for i, user in enumerate(range(self.n_users)):
         #     print(i, user)
         #     random_idx = np.random.choice(self.pop_candidates, 20, replace=False)
         #     rating_matrix[i, random_idx] = 1
 
-        # # 取rating_matrix排名前20的item的idx
+        # Take the indices of the top 20 items in the rating_matrix.
         # np.argsort(-rating_matrix, axis=1)
         # print("??")
         # print(pop_matrix)

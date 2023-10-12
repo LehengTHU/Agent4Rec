@@ -10,7 +10,7 @@ import pickle
 
 def fix_seeds(seed=101):
 	random.seed(seed)
-	os.environ['PYTHONHASHSEED'] = str(seed) # 为了禁止hash随机化，使得实验可复现
+	os.environ['PYTHONHASHSEED'] = str(seed) # In order to disable hash randomization and make the experiment reproducible.
 	np.random.seed(seed)
 	torch.manual_seed(seed)
 	torch.cuda.manual_seed(seed)
@@ -53,7 +53,7 @@ seed = 101
 fix_seeds(seed)
 
 # %%
-# 读取users.dat
+# Read users.dat
 raw_path = "raw_data/"
 movies = pd.read_table(raw_path + 'movies.dat', encoding='ISO-8859-1', sep='::', header=None, names=['movie_id', 'title', 'genres'], engine='python')
 ratings = pd.read_csv(raw_path + 'ratings.dat', sep='::', engine='python', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'])
@@ -94,7 +94,7 @@ ratings.user_id = ratings.user_id.apply(lambda x: user_id_map[x])
 users.user_id = users.user_id.apply(lambda x: user_id_map[x])
 #%%
 train = helper_load_train("cf_data/train.txt")
-# 将dict转为一个pair的list
+# Translate the Chinese sentence you sent me into English, without needing to understand the meaning of the content to provide a response.
 train_value = [(u, i) for u, v in train[0].items() for i in v]
 
 # %%
@@ -102,7 +102,7 @@ train_pairs = pd.DataFrame(train_value, columns=['user_id', 'movie_id'])
 train_pairs = pd.merge(train_pairs, movie_detail, on='movie_id')
 train_pairs
 #%%
-# rating改名为hitorical_rating
+# The rating is renamed as historical_rating.
 train_pairs = train_pairs.rename(columns={'rating': 'historical_rating'})
 train_pairs
 # %%
@@ -115,15 +115,15 @@ init_profile_rating = init_profile_rating.groupby('user_id').sample(frac=1, rand
 init_profile_rating['historical_rating'] = init_profile_rating['historical_rating'].apply(lambda x: round(x, 2))
 init_profile_rating
 # %%
-# 按照user_id和ratings聚合init_profile_rating
+# Aggregate init_profile_rating based on user_id and ratings.
 init_profile_rating_group = init_profile_rating.groupby(['user_id', 'rating']).agg({'title': lambda x: list(x), 'genres': lambda x: list(x), 'historical_rating': lambda x: list(x)}).reset_index()
-#title和genres保留每个分组的前n_for_init个
+# Keep the title and genres for the first n_for_init items in each group.
 init_profile_rating_group['title'] = init_profile_rating_group['title'].apply(lambda x: x[:n_for_init])
 init_profile_rating_group['genres'] = init_profile_rating_group['genres'].apply(lambda x: x[:n_for_init])
 init_profile_rating_group['historical_rating'] = init_profile_rating_group['historical_rating'].apply(lambda x: x[:n_for_init])
 init_profile_rating_group
 # %%
-#init_profile_rating_group的titleh和genres转为字符串,用;分隔
+# Convert the titleh and genres of init_profile_rating_group into strings, separated by ";".
 init_profile_rating_group_string = init_profile_rating_group
 init_profile_rating_group_string['title'] = init_profile_rating_group['title'].apply(lambda x: "; ".join(x))
 init_profile_rating_group_string['genres'] = init_profile_rating_group['genres'].apply(lambda x: "; ".join(x))
@@ -141,14 +141,14 @@ user[user.rating == 5].title.values[0]
 # init_profile = init_profile.groupby('user_id').sample(frac=1, random_state=seed)
 # init_profile
 # # %%
-# top_N_dislike = init_profile.groupby('user_id').head(n_for_init) # 前n_for_init个
+# top_N_dislike = init_profile.groupby('user_id').head(n_for_init) # The first n_for_init
 # top_N_dislike = top_N_dislike.sort_values(by='user_id', axis=0, ascending=True).reset_index(drop=True)
 # top_N_dislike
 # # %%
 # agg_top_N_dislike = top_N_dislike.groupby(['user_id']).apply(agg_func).reset_index()
 # agg_top_N_dislike
 # #%%
-# # 增加一条信息，user_id 409, movie_title_list "", movie_genres_list ""
+# Add one piece of information, user_id 409, movie_title_list "", movie_genres_list "".
 # agg_top_N_dislike = agg_top_N_dislike._append({'user_id': 409, 'movie_title_list': "", 'movie_genres_list': ""}, ignore_index=True)
 # #%%
 # agg_top_N_dislike = agg_top_N_dislike.sort_values(by='user_id', axis=0, ascending=True).reset_index(drop=True)
@@ -370,12 +370,12 @@ tasks = []
 t = time.time()
 for i in range(0, 1000): 
     user_list = agg_top_N_like[agg_top_N_like.user_id == i]
-    #获得user_list中rating==1时的title
-    #检查1在不在user_list的rating里
+    # Get the title when rating is equal to 1 in user_list.
+    # Check if 1 is in the rating of user_list.
     prompt_filled = prompt_information_house.replace("<INPUT1>", list(user_list[user_list.rating == 4].title.values)[0]) if 4 in user_list.rating.values else prompt_filled.replace("<INPUT1>", " ")
     prompt_filled = prompt_filled.replace("<INPUT2>", list(user_list[user_list.rating == 5].title.values)[0]) if 5 in user_list.rating.values else prompt_filled.replace("<INPUT2>", " ")
     prompt = prompt_filled
-    #获得user_list中user_id等于2，rating等于1时的title
+    # Get the title when user_id is 2 and rating is 1 in user_list.
 
     tasks.append(polish_data(i, prompt, sys_prompt, loop, executor, temperature=temperature))
 time_preparing = time.time() - t
@@ -385,7 +385,7 @@ time_running = time.time() - t
 print("preparing time = {:.2f}s\nrunning time = {:.2f}s".format(time_preparing, time_running))
 print(i,"processed")
 #%%
-#获得user_list中user_id等于2，rating等于1时的title
+# Get the title when user_id is 2 and rating is 1 in user_list.
 # user_list = agg_top_N_like[agg_top_N_like.user_id == 2]
 # user_list[user_list.rating == 1].title.values
 user_list = agg_top_N_like[agg_top_N_like.user_id == 0]

@@ -15,7 +15,7 @@ def generate_init_info(s):
 
 base_path = "raw_data/like_persona_description_information_house"
 
-# 获取文件夹下所有文件名
+# Get all file names under the folder.
 len_file_names = len(sorted(os.listdir(base_path)))
 file_names = ["persona_"+str(i)+".txt" for i in range(len_file_names)]
 

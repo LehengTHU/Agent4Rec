@@ -330,7 +330,7 @@ class Avatar(abstract_avatar):
         reaction = self._reaction(messages, timeout=60) # reaction
         self.write_log("\n" + reaction, color="yellow")
 
-        #@ 2 加入用户对这一页用户的满意程度信息
+        # @ 2 Add user satisfaction information for this page.
 
         # =========================
         # pattern = re.compile(r'MOVIE: (.*?) WATCH: (.*?) REASON: (.*?) FEELING: (.*?) RATING: (\d)')
@@ -368,7 +368,7 @@ class Avatar(abstract_avatar):
         #     self.memory.add_memory(f"I dislike the recommended movie {movie[0]} on page {current_page}, because {movie[1]}, after watching the movie, I feel {movie[2]}"
         #         , now=datetime.datetime.now())
 
-        #@ 3 用户做出下一步的决定
+        # User makes the next decision.
         next_decision = self.make_next_decision(current_page=current_page)
         # matches = re.findall(r"\[(.*?)\]", next_decision)[0]
         # print(matches)

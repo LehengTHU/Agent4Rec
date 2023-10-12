@@ -144,7 +144,7 @@ class Data:
     def add_special_model_attr(self, args):
         pass
 
-    # self.trainUser, self.trainItem 分别是训练集中的用户和物品，交互列表
+    # self.trainUser and self.trainItem are respectively the users and items in the training set, in the form of an interaction list.
     def load_data(self):
         self.train_user_list, train_item, self.train_item_list, self.trainUser, self.trainItem = helper_load_train(
             self.train_file)
@@ -207,7 +207,7 @@ class Data:
         pop_item = {key: len(value) for key, value in self.train_item_list.items()}
         self.pop_item = pop_item
         self.pop_user = pop_user
-        # 转换成一个unique的value
+        # Convert to a unique value.
         sorted_pop_user = list(set(list(pop_user.values())))
         sorted_pop_item = list(set(list(pop_item.values())))
         sorted_pop_user.sort()
@@ -224,7 +224,7 @@ class Data:
 
         self.user_pop_idx = np.zeros(self.n_users, dtype=int)
         self.item_pop_idx = np.zeros(self.n_items, dtype=int)
-        # 把原来稀疏的popularity转化为dense的popularity
+        # Convert the originally sparse popularity into dense popularity.
         for key, value in pop_user.items():
             self.user_pop_idx[key] = user_idx[value]
         for key, value in pop_item.items():
@@ -286,7 +286,7 @@ class Data:
                 pre_adj_mat = sp.load_npz(self.path + '/s_pre_adj_mat.npz')
                 print("finish loading adjacency matrix")
                 norm_adj = pre_adj_mat
-            #@ 如果没有预处理的邻接矩阵，就生成一个
+            # If there is no preprocessed adjacency matrix, generate one.
             except:
                 print("generating adjacency matrix")
                 s = time.time()

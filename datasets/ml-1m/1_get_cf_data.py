@@ -10,7 +10,7 @@ import pickle
 
 def fix_seeds(seed=101):
 	random.seed(seed)
-	os.environ['PYTHONHASHSEED'] = str(seed) # 为了禁止hash随机化，使得实验可复现
+	os.environ['PYTHONHASHSEED'] = str(seed) # In order to disable hash randomization and make the experiment reproducible.
 	np.random.seed(seed)
 	torch.manual_seed(seed)
 	torch.cuda.manual_seed(seed)
@@ -39,7 +39,7 @@ def int_to_user_dict(interaction):
             user_dict[u] = [v]
         else:
             user_dict[u].append(v)
-    # 根据key sort
+    # Sort according to key.
     user_dict = dict(sorted(user_dict.items(), key=lambda x: x[0]))
     return user_dict
 
@@ -51,28 +51,28 @@ def save_user_dict_to_txt(user_dict, base_path, filename):
                 f.write(' ' + str(int(i)))
             f.write('\n')
 #%%
-# 固定seed
+# Fixed seed
 seed = 101
 fix_seeds(seed)
 
 # %%
-# 读取users.dat
+# Read users.dat
 raw_path = "raw_data/"
 movies = pd.read_table(raw_path + 'movies.dat', encoding='ISO-8859-1', sep='::', header=None, names=['movie_id', 'title', 'genres'], engine='python')
 ratings = pd.read_csv(raw_path + 'ratings.dat', sep='::', engine='python', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'])
 users = pd.read_csv(raw_path + 'users.dat', sep='::', engine='python', header=None, names=['user_id', 'gender', 'age', 'occupation', 'zip-code'])
 # %%
-# 将评分大于3的作为正样本
+# Take the sentences with a rating greater than 3 as positive samples.
 pairs = ratings[ratings['rating'] > 3]
 pairs
 # %%
-# 大于20次交互的用户
+# Users with more than 20 interactions.
 filter_gate = 20
 int_per_user = pairs.groupby('user_id').size().reset_index(name='counts')
 filtered_users = int_per_user[int_per_user['counts'] >= filter_gate]
 filtered_users
 #%%
-# 只取大于20次交互的用户的交互数据
+# Only take interaction data from users with more than 20 interactions.
 pairs = pairs[pairs['user_id'].isin(filtered_users['user_id'])]
 pairs = pairs.reset_index(drop=True)[['user_id', 'movie_id', 'rating']]
 pairs = pairs.sample(frac=1, random_state=seed).reset_index(drop=True)
@@ -80,7 +80,7 @@ pairs = pairs.sort_values(by='user_id', axis=0, ascending=True).reset_index(drop
 pairs
 
 #%%
-# 随机取1000个用户
+# Randomly select 1000 users.
 random_users = pairs.user_id.unique()
 random_users = np.random.choice(random_users, size=1000, replace=False)
 #pairs = pairs[pairs['user_id'].isin(random_users)]
@@ -88,7 +88,7 @@ pairs = ratings[ratings['user_id'].isin(random_users)]
 # %%
 pairs
 # %%
-# train valid test 分为4:3:3
+# train valid test is divided into 4:3:3
 train_pairs = pairs.groupby('user_id').sample(frac=0.4, random_state=seed)
 valid_pairs = pairs[~pairs.index.isin(train_pairs.index)]
 valid_pairs = valid_pairs.groupby('user_id').sample(frac=0.5, random_state=seed)
@@ -99,7 +99,7 @@ print(len(train_pairs)/len(pairs), len(valid_pairs)/len(pairs), len(test_pairs)/
 pos_items_train = train_pairs.movie_id.unique()
 pos_users_train = train_pairs.user_id.unique()
 
-# 只选取train中出现的user和item
+# Only select the user and item that appear in the train.
 valid_pairs = valid_pairs[valid_pairs.user_id.isin(pos_users_train) & valid_pairs.movie_id.isin(pos_items_train)]
 test_pairs = test_pairs[test_pairs.user_id.isin(pos_users_train) & test_pairs.movie_id.isin(pos_items_train)]
 print(len(train_pairs)/len(pairs), len(valid_pairs)/len(pairs), len(test_pairs)/len(pairs))
@@ -108,7 +108,7 @@ movies = movies[movies.movie_id.isin(pos_items_train)].reset_index(drop=True)
 users = users[users.user_id.isin(pos_users_train)].reset_index(drop=True)
 
 #%%
-# 重新map user_id和movie_id
+# Remap user_id and movie_id.
 user_id_map = {}
 movie_id_map = {}
 
@@ -131,7 +131,7 @@ movies['movie_id'] = movies['movie_id'].map(movie_id_map)
 users['user_id'] = users['user_id'].map(user_id_map)
 
 #%%
-# 保存user_id_map，用pickle
+# Save user_id_map using pickle.
 with open('raw_data/user_id_map.pkl', 'wb') as f:
     pickle.dump(user_id_map, f)
 with open('raw_data/movie_id_map.pkl', 'wb') as f:
@@ -156,7 +156,7 @@ base_path = 'cf_data/'
 if not os.path.exists(base_path):
     os.makedirs(base_path)
 else:
-    # 去除目录下所有文件
+    # Remove all files in the directory.
     files = os.listdir(base_path)
     for file in files:
         os.remove(base_path + file)
@@ -171,7 +171,7 @@ init_profile = pd.merge(train_pairs, movies, on='movie_id')
 init_profile = init_profile.groupby('user_id').sample(frac=1, random_state=seed)
 init_profile
 #%%
-top_N_like = init_profile.groupby('user_id').head(n_for_init) # 前n_for_init个
+top_N_like = init_profile.groupby('user_id').head(n_for_init) # The first n_for_init
 top_N_like['rating'] = top_N_like['rating'].astype(str)
 top_N_like = top_N_like.sort_values(by='user_id', axis=0, ascending=True).reset_index(drop=True)
 top_N_like

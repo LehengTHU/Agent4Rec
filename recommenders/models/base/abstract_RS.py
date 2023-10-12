@@ -195,7 +195,7 @@ class AbstractRS(nn.Module):
             # hyper_params_results = pd.read_excel(hyper_params_results_path)
             hyper_params_results = pd.read_csv(hyper_params_results_path)
         else:
-            # 用results创建一个新的dataframe
+            # Create a new dataframe using the results.
             hyper_params_results = pd.DataFrame(columns=frame_columns)
 
         hyper_params_results = hyper_params_results._append(results, ignore_index=True)

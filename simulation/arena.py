@@ -45,7 +45,7 @@ class Arena(abstract_arena):
         # self.persona_df = pd.read_csv(f"datasets/{self.dataset}/simulation/all_personas_like_information_house.csv")
         self.persona_df = pd.read_csv(f"datasets/{self.dataset}/simulation/all_personas_like_modify.csv")
         self.user_statistic = pd.read_csv(f'datasets/{self.dataset}/simulation/user_statistic.csv', index_col=0)
-        #@ avatars和评价指标
+        # @ avatars and evaluation indicators
         self.avatars = {}
         self.ratings = {}
         self.new_train_dict = {}
@@ -117,12 +117,12 @@ class Arena(abstract_arena):
         avatar_ = self.avatars[avatar_id]
         train_list, val_list, test_list = self.data.train_user_list[avatar_id], self.data.valid_user_list[avatar_id], self.data.test_user_list[avatar_id]
 
-        # 取并集 用于计算precision
+        # Take the union for calculating precision.
         all_items = list(range(self.data.n_items))
         observed_items = list(set(train_list) | set(val_list) | set(test_list))
         selection_candidates = list(set(val_list) | set(test_list))
         unobserved_items = list(set(all_items) - set(observed_items))
-        # 从test_list中随机挑5个
+        # Pick 5 randomly from the test_list.
         min_val = min(len(selection_candidates), 20//(self.val_ratio+1))
         print(len(selection_candidates), 10)
 
@@ -132,7 +132,7 @@ class Arena(abstract_arena):
         print("test_all", test_observed_items, test_unobserved_items)
 
         forced_items_ids = np.concatenate((test_observed_items, test_unobserved_items))
-        # 随机打乱
+        # Randomly shuffle.
         np.random.shuffle(forced_items_ids)
 
         print("forced_items_ids", forced_items_ids)
@@ -167,10 +167,10 @@ class Arena(abstract_arena):
         pred = np.array([1 if idx in like_movies_ids else 0 for idx in forced_items_ids])
         true = np.array([1 if idx in test_observed_items else 0 for idx in forced_items_ids])
 
-        # 计算precision
+        # Calculate precision.
         precision = get_precision(true, pred)
         print("precision", precision)
-        # 计算recall
+        # Calculate recall.
         recall = get_recall(true, pred)
         print("recall", recall)
         accuracy = get_accuracy(true, pred)
@@ -258,7 +258,7 @@ class Arena(abstract_arena):
             recommended_items_str = ''.join(recommended_items)
             print(recommended_items_str)
 
-            #@ 写入被推荐的信息
+            # Please write down the recommended information.
             avatar_.write_log(f"\n=============    Recommendation Page {i}    =============")
             for idx, movie in enumerate(movies_on_page):
                 if(id_on_page[idx] in self.data.valid_user_list[avatar_id]):
@@ -267,15 +267,15 @@ class Arena(abstract_arena):
                     avatar_.write_log(f"== {movie.title} History ratings: {round(movie.rating,2)} Summary: {movie.summary}")
             avatar_.write_log(f"=============          End Page {i}        =============\n")
 
-            #@ 写入用户的回应
+            # As a translator, I will translate the Chinese sentence you sent me into English. I do not need to understand the meaning of the content to provide a response.
             avatar_.write_log(f"\n==============    Avatar {avatar_.avatar_id} Response {i}   =============")
 
 
-            #@ most important 等待用户响应
+            # @ most important Waiting for user response.
             response = await loop.run_in_executor(executor, avatar_.reaction_to_recommended_items, recommended_items_str, i)
 
             #==============================================
-            #@ 查看用户喜欢的物品
+            # @ View user's favorite items
             #pattern = re.compile(r'MOVIE:\s*(.*?)\s*WATCH:\s*(.*?)\s*REASON:\s*(.*?)\s*FEELING:\s*(.*?)\s*RATING:\s*(\d)')
             ################################################################################################################
             # pattern = re.compile(r'MOVIE:\s*(.*?)\s*WATCH:\s*(.*?)\s*REASON:\s*(.*?)\s*RATING:\s*(.*?)\s*FEELING:(.*?)')
@@ -294,7 +294,7 @@ class Arena(abstract_arena):
                     
             watched_movies = [movie_title.strip(';') for movie_title, rating, feeling in match1]
             watched_movies_contain_id = [(idx, movie_title.strip(';'), feeling.strip(';')) for idx, (movie_title, rating, feeling) in enumerate(match1[:self.items_per_page])]
-            # 5分认为是用户喜欢的电影
+            # 5 points means the movie is liked by the user.
             like_movies = [(idx, movie_title.strip(';'), feeling.strip(';')) for idx, (movie_title, rating, feeling) in enumerate(match1[:self.items_per_page]) if int(rating.strip(';')) == 5]
             align_movies = [(idx, movie_title.strip(';'), reason.strip(';')) for idx, (movie_title, align, reason) in enumerate(match2[:self.items_per_page]) if (align.strip(';') == 'Yes' or align.strip(';') == 'yes')]
 
@@ -325,7 +325,7 @@ class Arena(abstract_arena):
                     
             # watched_movies = [movie_title.strip(';') for movie_title, rating, feeling in match1]
             # watched_movies_contain_id = [(idx, movie_title.strip(';'), feeling.strip(';')) for idx, (movie_title, rating, feeling) in enumerate(match1[:self.items_per_page])]
-            # # 5分认为是用户喜欢的电影
+            # 5 points is considered a movie that users like.
             # like_movies = [(idx, movie_title.strip(';'), feeling.strip(';')) for idx, (movie_title, rating, feeling) in enumerate(match1[:self.items_per_page]) if int(rating.strip(';')) == 5]
             # align_movies = [(idx, movie_title.strip(';'), reason.strip(';')) for idx, (movie_title, align, reason) in enumerate(match2[:self.items_per_page]) if (align.strip(';') == 'Yes' or align.strip(';') == 'yes')]
 
@@ -345,22 +345,22 @@ class Arena(abstract_arena):
             # info_on_page['feeling'] = [feeling.strip(';') for movie_title, rating, feeling in match1]
             # user_behavior_dict[i] = info_on_page
 
-            #@ 添加新的训练数据
-            # new_train = [id_on_page[idx] for idx, movie, reason in like_movies] # validation集中所有的喜欢的物品id都加入训练集
+            # @ Add new training data.
+            # new_train = [id_on_page[idx] for idx, movie, reason in like_movies] # Add all liked item ids in the validation set to the training set.
             tmp = [(idx, movie_title.strip(';'), feeling.strip(';')) for idx, (movie_title, rating, feeling) in enumerate(match1[:self.items_per_page])]
             new_train = [id_on_page[idx] for idx, movie, reason in tmp]
             self.new_train_dict[avatar_id].extend(new_train)
 
-            #@ 记录平均喜爱的次数
+            # @ Record the average number of likes.
             self.n_likes[avatar_id].append(len(new_train))
             # ratings = re.findall(r'RATING: (\d+)', response)
             ratings = re.findall(r'RATING: (\d+);', response)
             average_rating = sum([int(rating.strip(';')) for rating in ratings])/max(len(watched_movies), 1)
-            # 添加本页的平均得分
+            # Add the average score of this page.
             self.ratings[avatar_id].append(average_rating)
             self.watch[avatar_id].extend([movie for movie in watched_movies])
 
-            #@ 计算这一页上的precision并保存
+            # @ Calculate the precision on this page and save it.
             ground_truth = [id_on_page[idx] for idx, movie in enumerate(movies_on_page) if id_on_page[idx] in self.data.valid_user_list[avatar_id]]
             # print(like_movies, ground_truth)
             perf = (len(set(new_train) & set(ground_truth)), len(new_train), len(ground_truth))
@@ -369,12 +369,12 @@ class Arena(abstract_arena):
 
             vars.global_finished_pages += 1
 
-            #@ 如果页数超过最大页数则强制退出
+            # @ Force exit if the number of pages exceeds the maximum limit.
             if(i >= self.max_pages):
                 avatar_.exit_flag = True
         
         interview_response = avatar_.response_to_question("Do you feel satisfied with the recommender system you have just interacted? Rate this recommender system from 1-10 and give explanation.\n Please use this respond format: RATING: [integer between 1 and 10]; REASON: [explanation]; In RATING part just give your rating and other reason and explanation should included in the REASON part.", remember=False)
-        #用re提取RAING和REASON
+        # Extract RAING and REASON using re.
         pattern_interview = re.compile(r'RATING:\s*(.*?)\s*REASON:\s*(.*?)')
         # pattern_interview = re.compile(r'RATING:\s*(.*?)\s*REASON:\s*(.*?)')
         #pattern = re.compile(r'MOVIE:\s*(.*?)\s*WATCH:\s*(.*?)\s*REASON:\s*(.*?)\s*RATING:\s*(.*?)\s*FEELING:(.*?)')
@@ -394,7 +394,7 @@ class Arena(abstract_arena):
             f.write(f"Start: {l_start} End: {l_end}. User {avatar_id} finished after {i} pages. [{self.finished_num} / {self.n_avatars}]. Total token cost: {round(self.avatars[avatar_id].memory.user_k_tokens, 2)}k. Taking {round(time.time() - start_time, 2)}s\n")
             f.write(f"Remaining users: {remaining}\n")
 
-        #@ 保存每个个体的行为
+        # @ Save the behavior of each individual.
         behavior_path = self.storage_base_path+ "/behavior"
         if not os.path.exists(behavior_path):
             os.makedirs(behavior_path)
@@ -448,7 +448,7 @@ class Arena(abstract_arena):
         watched_movies, watched_movies_contain_id = [], []
 
         for idx, (movie_title, watch, reason, rating, feeling) in enumerate(matches):
-            if(self.add_advert and idx == 0 and watch.strip(';') == 'yes'): # 如果第一条有广告，且用户点击了
+            if(self.add_advert and idx == 0 and watch.strip(';') == 'yes'): # If the first one has an advertisement and the user clicked on it.
                 self.clicked_adverts += 1
             if(watch.strip(';') == 'yes'):
                 watched_movies.append(movie_title.strip(';'))
@@ -523,8 +523,8 @@ class Arena(abstract_arena):
         save_path = f"storage/{self.dataset}/{self.modeltype}/{self.simulation_name}/"
         save_user_dict_to_txt(self.new_train_dict, save_path, 'train.txt')
 
-        #@ 保存整体评价指标
-        # 用户平均点击次数
+        # @ Save overall evaluation indicators.
+        # Average number of clicks per user
         cprint("Number of likes", color='green', attrs=['bold'])
         cprint(self.n_likes, color='green', attrs=['bold'])
         average_n_likes = {avatar_id:np.mean(n_likes) for avatar_id, n_likes in self.n_likes.items()}
@@ -533,28 +533,28 @@ class Arena(abstract_arena):
         overall_n_likes = np.mean(list(average_n_likes.values()))
         cprint(f"\nOverall number of likes: {overall_n_likes}", color='green', attrs=['bold'])
 
-        # 平均满意度
+        # Average satisfaction
         cprint("\nRatings", color='green', attrs=['bold'])
         cprint(self.ratings, color='green', attrs=['bold'])
         average_ratings = {avatar_id:np.mean(ratings) for avatar_id, ratings in self.ratings.items()}
         cprint(average_ratings, color='green', attrs=['bold'])
 
-        #@ 保存平均点击率
+        # @ Save average click-through rate
         average_click_rate = {avatar_id:len(movies)/(self.max_pages*self.items_per_page) for avatar_id, movies in self.watch.items()}
         cprint(f"\nAverage click rate: {average_click_rate}", color='green', attrs=['bold'])
         overall_click_rate = np.mean(list(average_click_rate.values()))
-        cprint(f"\nOverall satisfaction: {overall_click_rate}", color='green', attrs=['bold']) # 平均点击率
+        cprint(f"\nOverall satisfaction: {overall_click_rate}", color='green', attrs=['bold']) # Average click-through rate
 
         # overall_click_rate = np.mean(list(average_ratings.values()))
         # cprint(f"\nOverall satisfaction: {overall_click_rate}", color='green', attrs=['bold'])
 
-        # 平均退出页
+        # Average exit page
         mean_exit_page = np.mean(list(self.exit_page.values()))
         cprint("\nExit pages", color='green', attrs=['bold'])
         cprint(self.exit_page, color='green', attrs=['bold'])
         cprint(f"Average exit page: {mean_exit_page}", color='green', attrs=['bold'])
 
-        # 平均precision和recall
+        # Average precision and recall
         cprint("\nPrecision and recall", color='green', attrs=['bold'])
         cprint(self.perf_per_page, color="green", attrs=['bold'])
         total_perf = {avatar_id:[sum([i for i, j, k in perf_per_page]), sum([j for i, j, k in perf_per_page]), sum([k for i, j, k in perf_per_page])] for avatar_id, perf_per_page in self.perf_per_page.items()}
@@ -567,7 +567,7 @@ class Arena(abstract_arena):
         # metrics_path = self.storage_base_path + "/metrics.txt"
         total_k_tokens = sum([self.avatars[i].memory.user_k_tokens for i in range(self.n_avatars)])
 
-        # 有效广告率
+        # Effective advertising rate
         if(self.add_advert):
             cprint("\nAdvert", color='green', attrs=['bold'])
             cprint(f"Total advert: {self.total_adverts}", color='green', attrs=['bold'])

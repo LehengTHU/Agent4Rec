@@ -10,7 +10,7 @@ import pickle
 
 def fix_seeds(seed=101):
 	random.seed(seed)
-	os.environ['PYTHONHASHSEED'] = str(seed) # 为了禁止hash随机化，使得实验可复现
+	os.environ['PYTHONHASHSEED'] = str(seed) # In order to disable hash randomization and make the experiment reproducible.
 	np.random.seed(seed)
 	torch.manual_seed(seed)
 	torch.cuda.manual_seed(seed)
@@ -18,12 +18,12 @@ def fix_seeds(seed=101):
 	torch.backends.cudnn.benchmark = False
 	torch.backends.cudnn.deterministic = True
 # %%
-# 固定seed
+# Fixed seed
 seed = 101
 fix_seeds(seed)
 
 # %%
-# 读取users.dat
+# Read users.dat
 raw_path = "raw_data/"
 movies = pd.read_table(raw_path + 'movies.dat', encoding='ISO-8859-1', sep='::', header=None, names=['movie_id', 'title', 'genres'], engine='python')
 ratings = pd.read_csv(raw_path + 'ratings.dat', sep='::', engine='python', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'])

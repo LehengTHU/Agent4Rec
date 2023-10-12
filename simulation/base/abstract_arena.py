@@ -55,15 +55,15 @@ class abstract_arena:
         load the recommender args, which is saved when training the recommender
         """
         self.saved_args = Namespace()
-        # 如果路径存在，就读取
+        # If the path exists, read.
         if(os.path.exists(model_path + '/args.txt')):
             with open(model_path + '/args.txt', 'r') as f:
                 self.saved_args.__dict__ = json.load(f)
         else:
             with open("recommenders/weights/default_args.txt", 'r') as f:
                 self.saved_args.__dict__ = json.load(f)
-        # 查看现在目录
-        self.saved_args.data_path = 'datasets/' #修改目录
+        # View current directory.
+        self.saved_args.data_path = 'datasets/' # Modify the table of contents.
         self.saved_args.dataset = self.dataset
         self.saved_args.cuda = self.args.cuda
         self.saved_args.modeltype = self.modeltype
@@ -160,7 +160,7 @@ class abstract_arena:
         # else:
         # dump_dict = merge_user_list([self.data.train_user_list,self.data.valid_user_list])
         print("nodrop?", self.data.nodrop)
-        #@ 用valid data 做simulation
+        # @ Use valid data for simulation.
         if(self.data.nodrop):
             dump_dict = merge_user_list([self.data.train_nodrop_user_list, self.data.test_user_list])
         else:
