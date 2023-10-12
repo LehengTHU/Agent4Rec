@@ -30,7 +30,6 @@ class Avatar(abstract_avatar):
         self.parse_init_property(init_property)
         self.parse_init_statistic(init_statistic)
         self.log_file = f"storage/{args.dataset}/{args.modeltype}/{args.simulation_name}/running_logs/{avatar_id}.txt"
-        self.user_most_like = pd.read_pickle('/storage_fast/lhsheng/lhsheng/Sandbox/Simulator/scripts/user_genre_dict.pkl')
         if os.path.exists(self.log_file):
             os.remove(self.log_file)
         self.init_memory()
@@ -56,7 +55,6 @@ class Avatar(abstract_avatar):
         """
 # diversity_dict
         activity_dict = {   1:"An Incredibly Elusive Occasional Viewer, so seldom attracted by movie recommendations that it's almost a legendary event when you do watch a movie. Your movie-watching habits are extraordinarily infrequent. And you will exit the recommender system immediately even if you just feel little unsatisfied.",
-                            #2:"A Casual Watcher who watches movies occasionally in the system. You only have moderate interest in recommendations. And you tend to exit recommendation system if you have some unsatisfied memory.",
                             2:"An Occasional Viewer, seldom attracted by movie recommendations. Only curious about watching movies that strictly align the taste. The movie-watching habits are not very infrequent. And you tend to exit the recommender system if you have a few unsatisfied memories.",
                             3:"A Movie Enthusiast with an insatiable appetite for films, willing to watch nearly every movie recommended to you. Movies are a central part of your life, and movie recommendations are integral to your existence. You are tolerant of recommender system, which means you are not easy to exit recommender system even if you have some unsatisfied memory."}
 
@@ -273,8 +271,7 @@ class Avatar(abstract_avatar):
         # observation = "What are your activity and conformity characteristic? How do you feel about the recommender system?"
         # relevant_memories = self.memory.fetch_memories(observation)
         # formated_relevant_memories = self.memory.format_memories_detail(relevant_memories)
-        top_1_genre = self.user_most_like[self.avatar_id][0]
-        taste_str = "I like movies with genres: " + top_1_genre
+
         sys_prompt = ("You excel at role-playing. Picture yourself as a user exploring a movie recommendation system. You have the following social traits:"
                 +f"\nYour activity trait is described as: {self.activity_dsc}"
                 +f"\nYour conformity trait is described as: {self.conformity_dsc}"
