@@ -184,22 +184,6 @@ class AvatarMemory(BaseMemory):
     
     def _user_satisfaction_reflection(self, last_k: int = 10) -> List[str]:
         """Return the user's feeling about recent movies."""
-        # prompt = """
-        #     The following operations are performed by user in the recommendation system recently:
-        #     <INPUT>\n\n
-        #     Given only the information above, describe the user's feeling of recommendation result using a word.(e.g the user feels excited/bored/tired/exhausted)
-        #     frequently click next page may imply the user is losing interest and watch more movies before switching to next page may imply the user is enjoying
-        #     The output format must be: 
-        #     user feels <word>.
-        #     """
-        # prompt = """
-        #     Relevant memories:
-        #     <INPUT>\n\n
-        #     Given only the information above, describe your level satisfaction about the recommendation result using a sentence. 
-        #     High click rate and rating is a sign of enjoyment, and low click rate (below 3 movies per page) and rating (below 4) may stand for unsatisfaction.
-        #     The output format must be:
-        #     [unsatisfied/satisfied] with the recommendation result because [reason].
-        #     """
         prompt = """
             <INPUT>\n\n
             Given only the information above, describe your feeling of the recommendation result using a sentence. 

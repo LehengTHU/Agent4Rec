@@ -38,16 +38,9 @@ class Avatar(abstract_avatar):
         """
         Parse the init property of the avatar
         """
-        # self.taste = init_property["taste"].split("| ")
         self.taste = init_property["taste"].split("| ")
-        # reason = init_property["reason"].split("| ")
-        # self.taste = [taste[i] + " because " + reason[i] for i in range(len(taste))]
         self.high_rating = init_property["high_rating"]
-        #self.low_rating = "should give low ratings to movies that don't have above genres or movies that have low historical ratings."
-        # self.low_rating = init_property["low_rating"]
-        #self.reason = init_property["reason"].split("| ")
-        #self.movie = init_property["movie"].split("| ")
-        #print(self.taste, self.reason, self.movie)
+
 
     def parse_init_statistic(self, init_statistic):
         """
@@ -188,9 +181,6 @@ class Avatar(abstract_avatar):
         return response
     
     def response_to_question(self, question, remember=False):
-        # prompt_template = ""
-        # {agent_summary_description}
-        # relevant_memories = self.memory.fetch_memories(question)
         relevant_memories = self.memory.memory_retriever.memory_stream
         formated_relevant_memories = self.memory.format_memories_detail(relevant_memories)
         sys_prompt = (f"You excel at role-playing. Picture yourself as user {self.avatar_id} who has just finished exploring a movie recommendation system. You have the following social traits:"
@@ -229,9 +219,6 @@ class Avatar(abstract_avatar):
         """
 
         sys_prompt = ("Assume you are a user browsing movie recommendation system who has the following characteristics: "
-                # +f"\n{self.conformity_dsc}"
-                # +f"\n{self.activity_dsc}"
-                # +f"\n{self.diversity_dsc}"
                 +f"\nYour movie tastes are: {'; '.join(self.taste).replace('I ','')}. ")
         prompt = (
                 "##recommended list## \n" 
@@ -258,27 +245,13 @@ class Avatar(abstract_avatar):
         try:
             high_rating = self.high_rating.replace('You are','')
         except:
-            # print('low_rating', self.low_rating)
-            # print('high_rating', self.high_rating)
             high_rating = ''
-
-        # if(current_page == 1):
-        #     self.memory.add_memory(f"My activity characteristic is: {self.activity_dsc}"
-        #         , now=datetime.datetime.now())
-        #     self.memory.add_memory(f"My conformity characteristic is: {self.conformity_dsc}"
-        #         , now=datetime.datetime.now())
-
-        # observation = "What are your activity and conformity characteristic? How do you feel about the recommender system?"
-        # relevant_memories = self.memory.fetch_memories(observation)
-        # formated_relevant_memories = self.memory.format_memories_detail(relevant_memories)
 
         sys_prompt = ("You excel at role-playing. Picture yourself as a user exploring a movie recommendation system. You have the following social traits:"
                 +f"\nYour activity trait is described as: {self.activity_dsc}"
                 +f"\nYour conformity trait is described as: {self.conformity_dsc}"
                 +f"\nYour diversity trait is described as: {self.diversity_dsc}"
                 +f"\nBeyond that, your movie tastes are: {'; '.join(self.taste).replace('I ','')}. "
-                # +f"\nBeyond that, your movie tastes are: {taste_str}. You will watch any movie that contain the genre {top_1_genre}. You won't watch movie that dosn't contain the genre {top_1_genre}."
-                # You won't watch movie that dosn't contain the genre {top_1_genre}."
                 +f"\nAnd your rating tendency is {high_rating}"#+f"{low_rating}"
                 +"\nThe activity characteristic pertains to the frequency of your movie-watching habits. The conformity characteristic measures the degree to which your ratings are influenced by historical ratings. The diversity characteristic gauges your likelihood of watching movies that may not align with your usual taste."
                 )
@@ -287,21 +260,6 @@ class Avatar(abstract_avatar):
             relevant_memories = self.memory.fetch_memories(observation)
             formated_relevant_memories = self.memory.format_memories_detail(relevant_memories)
             sys_prompt = sys_prompt +f"\nRelevant context from your memory:{formated_relevant_memories}"
-
-        # prompt = (
-        #         "##recommended list## \n" + f"PAGE {current_page}\n"
-        #         +recommended_items_str
-        #         +"\nPlease response to all the movies in the ##recommended list## and give explains."
-        #         +"\nYou will decide the number of movies you want to watch according to your activity characteristic."
-        #         +"\nAfter that, assume it's the first time you watch the movie you choose, you will rate movies with 1-5 score reflecting different extent of like, according to your feeling after watching the movie and  your conformity characteristic."
-        #         +"\n1 score: not very satisfied with the movie, finding it to have some issues, but with a few redeeming qualities."
-        #         +"\n3 score: have many strengths, such as excellent performances, a compelling plot, though there may still be some shortcomings."
-        #         +"\n5 score: highly satisfied with the movie, deeming it a masterpiece with outstanding qualities in various aspects Your rating will be influenced by your conformity degree."
-        #         +"\nFor response, use this format: MOVIE: [movie name]; WATCH: [yes or no]; REASON: [brief reason]; RATING: [integer between 1-5]; FEELING: [aftermath sentence]; "
-        #         +"\nIf you don't want to watch a movie, use WATCH: no; REASON: [brief reason]; RATING: 0; FEELING: [aftermath sentence];"
-        #         +"\nFor example: MOVIE: Dracula: Dead and Loving It (1995); WATCH: yes; REASON: comedy is aligned with my movie taste; RATING:2; FEELING: although the genres seem attractive, but the movie quality is poor."
-        #         +"\nYou must response to all the recommended movies. Notice that each response must be on one line. Do not include any additional information or explanations and stay grounded in reality."
-        # )
 
         prompt = (
                 "#### Recommended List #### \n"
@@ -330,20 +288,6 @@ class Avatar(abstract_avatar):
         # @ 2 Add user satisfaction information for this page.
 
         # =========================
-        # pattern = re.compile(r'MOVIE: (.*?) WATCH: (.*?) REASON: (.*?) FEELING: (.*?) RATING: (\d)')
-        #pattern = re.compile(r'MOVIE:\s*(.*?)\s*WATCH:\s*(.*?)\s*REASON:\s*(.*?)\s*FEELING:\s*(.*?)\s*RATING:\s*(\d)')
-        ###########################################################################################
-        # pattern = re.compile(r'MOVIE:\s*(.*?)\s*WATCH:\s*(.*?)\s*REASON:\s*(.*?)\s*RATING:\s*(.*?)\s*FEELING:(.*?)')
-        # matches = re.findall(pattern, reaction)
-        # all_movies = ", ".join([movie_title.strip(';') for movie_title, watch, reason, rating, feeling in matches])
-        # watched_movies = [movie_title.strip(';') for movie_title, watch, reason, rating, feeling in matches if (watch.strip(';').lower() == 'yes')]
-        # watched_movies_ratings = [rating.strip(';') for movie_title, watch, reason, rating, feeling in matches if (watch.strip(';').lower() == 'yes')]
-        # unwatched_movies = [movie_title.strip(';') for movie_title, watch, reason, rating, feeling in matches if (watch.strip(';').lower() != 'yes')]
-        # like_movies = [(movie_title.strip(';'), reason.strip(';'), feeling.strip(';')) for movie_title, watch, reason, rating, feeling in matches if (watch.strip(';').lower() == 'yes' and int(rating.strip(';')) == 5)]
-        # dislike_movies = [(movie_title.strip(';'), reason.strip(';'), feeling.strip(';')) for movie_title, watch, reason, rating, feeling in matches if (int(rating.strip(';')) < 4)]
-        ###########################################################################################
-
-        # =========================
         pattern1 = re.compile(r'MOVIE: (.+?); RATING: (\d+); FEELING: (.*)')
         match1 = pattern1.findall(reaction)
         pattern2 = re.compile(r'MOVIE: (.+?); ALIGN: (.+?); REASON: (.*)')
@@ -357,19 +301,9 @@ class Avatar(abstract_avatar):
         self.memory.add_memory(f"The recommender recommended the following movies to me on page {current_page}: {all_movies}, among them, I watched {watched_movies} and rate them {watched_movies_ratings} respectively. I dislike the rest movies: {dislike_movies}."
             , now=datetime.datetime.now()
         )
-        # for movie in like_movies:
-        #     self.memory.add_memory(f"I like the recommended movie {movie[0]} on page {current_page}, because {movie[1]}, after watching the movie, I feel {movie[2]}"
-        #         , now=datetime.datetime.now())
-        
-        # for movie in dislike_movies:
-        #     self.memory.add_memory(f"I dislike the recommended movie {movie[0]} on page {current_page}, because {movie[1]}, after watching the movie, I feel {movie[2]}"
-        #         , now=datetime.datetime.now())
 
         # User makes the next decision.
         next_decision = self.make_next_decision(current_page=current_page)
-        # matches = re.findall(r"\[(.*?)\]", next_decision)[0]
-        # print(matches)
-        # if(matches == 'EXIT' or matches == 'exit'):
         if('[EXIT]' in next_decision or '[exit]' in next_decision):
             self.exit_flag = True
             self.memory.add_memory(f"After browsing {current_page} pages, I decided to leave the recommendation system."
@@ -379,17 +313,6 @@ class Avatar(abstract_avatar):
             self.memory.add_memory(f"Turn to page {current_page+1} of the recommendation."
                 , now=datetime.datetime.now())
         #===========================
-
-        #@ 4
-        # self.response_to_question("How do you feel about the recommendation result of the recommender?", remember=True)
-        # self.response_to_question("Why do you have that feeling?")
-
-
-        # cprint(f"printing memory {self.avatar_id}", color='green', attrs=['bold'])
-        # print(self.memory.memory_retriever.memory_stream)
-
-        # cprint(f"Avatar {self.avatar_id} is exiting", color='green', attrs=['bold'])
-        # self.memory.update_memory(reaction) # reflection
 
         return reaction
 

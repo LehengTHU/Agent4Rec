@@ -289,7 +289,7 @@ class Arena(abstract_arena):
             # matches_interview = re.findall(pattern_interview, interview_response)
 
             if(self.add_advert):
-                if(matches[0][1].strip(';') == 'yes'):
+                if(match2[0][1].strip(';') == 'yes'):
                     self.clicked_adverts += 1
                     
             watched_movies = [movie_title.strip(';') for movie_title, rating, feeling in match1]
@@ -313,37 +313,6 @@ class Arena(abstract_arena):
             #info_on_page['reason'] = [reason.strip(';') for movie_title, rating, feeling in match1]
             info_on_page['feeling'] = [feeling.strip(';') for movie_title, rating, feeling in match1]
             user_behavior_dict[i] = info_on_page
-            ################################################################################################################
-            # pattern1 = re.compile(r'MOVIE: (.+?); WATCH:.*; REASON:.*; RATING: (\d+);FEELING: (.*)')
-            # match1 = pattern1.findall(response)
-            # pattern2 = re.compile(r'MOVIE: (.+?); ALIGN: (.+?); REASON: (.*)')
-            # match2 = pattern2.findall(response)
-
-            # # if(self.add_advert):
-            # #     if(matches[0][1].strip(';') == 'yes'):
-            # #         self.clicked_adverts += 1
-                    
-            # watched_movies = [movie_title.strip(';') for movie_title, rating, feeling in match1]
-            # watched_movies_contain_id = [(idx, movie_title.strip(';'), feeling.strip(';')) for idx, (movie_title, rating, feeling) in enumerate(match1[:self.items_per_page])]
-            # 5 points is considered a movie that users like.
-            # like_movies = [(idx, movie_title.strip(';'), feeling.strip(';')) for idx, (movie_title, rating, feeling) in enumerate(match1[:self.items_per_page]) if int(rating.strip(';')) == 5]
-            # align_movies = [(idx, movie_title.strip(';'), reason.strip(';')) for idx, (movie_title, align, reason) in enumerate(match2[:self.items_per_page]) if (align.strip(';') == 'Yes' or align.strip(';') == 'yes')]
-
-
-            # info_on_page = {}
-            # info_on_page['page'] = i
-            # info_on_page['ground_truth'] = [id_on_page[idx] for idx, movie in enumerate(movies_on_page) if id_on_page[idx] in self.data.valid_user_list[avatar_id]]
-            # info_on_page['recommended_id'] = id_on_page
-            # info_on_page['recommended'] = [self.movie_detail['title'][idx] for idx in id_on_page]
-            # info_on_page['align_id'] = [id_on_page[idx] for idx, movie, reason in align_movies]
-            # info_on_page['like_id'] = [id_on_page[idx] for idx, movie, feeling in like_movies]
-            # info_on_page['watch_id'] = [id_on_page[idx] for idx, movie, feeling in watched_movies_contain_id]
-            # info_on_page['watched'] = watched_movies
-            # info_on_page['rating_id'] = [id_on_page[idx] for idx, (movie_title, rating, feeling) in enumerate(match1[:self.items_per_page])]
-            # info_on_page['rating'] = [int(rating.strip(';')) for movie_title, rating, feeling in match1]
-            # #info_on_page['reason'] = [reason.strip(';') for movie_title, rating, feeling in match1]
-            # info_on_page['feeling'] = [feeling.strip(';') for movie_title, rating, feeling in match1]
-            # user_behavior_dict[i] = info_on_page
 
             # @ Add new training data.
             # new_train = [id_on_page[idx] for idx, movie, reason in like_movies] # Add all liked item ids in the validation set to the training set.
