@@ -117,19 +117,11 @@ The results of the simulation will be saved in `storage/ml-1m/<model_name>/<expe
 
 ## Reference 
 ```
-@article{
-    zhang2023agent4rec,
-    author       = {An Zhang and
-                    Leheng Sheng and
-                    Yuxin Chen and
-                    Hao Li and
-                    Yang Deng and
-                    Xiang Wang and
-                    Tat{-}Seng Chua},
-    title        = {On Generative Agents in Recommendation},
-    journal      = {CoRR},
-    volume       = {abs/2310.10108},
-    year         = {2023}
+@article{zhang2023agent4rec,
+  title={On Generative Agents in Recommendation},
+  author={Zhang, An and Sheng, Leheng and Chen, Yuxin and Li, Hao and Deng, Yang and Wang, Xiang and Chua, Tat-Seng},
+  journal={arXiv preprint arXiv:2310.10108},
+  year={2023}
 }
 ```
 
