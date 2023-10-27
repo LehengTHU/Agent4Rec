@@ -115,4 +115,21 @@ The results of the simulation will be saved in `storage/ml-1m/<model_name>/<expe
 ## 💰 Simulation Cost
 🛎️ Note that all the experiments are powered by ChatGPT-3.5, and a complete simulation involving 1000 users would cost approximately $16. ($0.016/User)
 
+## Reference 
+```
+@article{
+    zhang2023agent4rec,
+    author       = {An Zhang and
+                    Leheng Sheng and
+                    Yuxin Chen and
+                    Hao Li and
+                    Yang Deng and
+                    Xiang Wang and
+                    Tat{-}Seng Chua},
+    title        = {On Generative Agents in Recommendation},
+    journal      = {CoRR},
+    volume       = {abs/2310.10108},
+    year         = {2023}
+}
+```
 
