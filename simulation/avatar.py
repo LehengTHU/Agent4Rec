@@ -149,7 +149,6 @@ class Avatar(abstract_avatar):
     
     
     def make_next_decision(self, remember=False, current_page=None):
-        # observation = "How do you feel about the recommender system"
         observation = "Do you satisfy with current recommendation system and what's your interaction history?"
         relevant_memories = self.memory.fetch_memories(observation)
         formated_relevant_memories = self.memory.format_memories_detail(relevant_memories)
