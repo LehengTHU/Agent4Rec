@@ -35,9 +35,6 @@ class Avatar(abstract_avatar):
         self.init_memory()
 
     def parse_init_property(self, init_property):
-        """
-        Parse the init property of the avatar
-        """
         self.taste = init_property["taste"].split("| ")
         self.high_rating = init_property["high_rating"]
 
