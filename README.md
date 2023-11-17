@@ -122,6 +122,6 @@ The results of the simulation will be saved in `storage/ml-1m/<model_name>/<expe
   author={Zhang, An and Sheng, Leheng and Chen, Yuxin and Li, Hao and Deng, Yang and Wang, Xiang and Chua, Tat-Seng},
   journal={arXiv preprint arXiv:2310.10108},
   year={2023}
-} -->
-```
+}
+``` -->
 
