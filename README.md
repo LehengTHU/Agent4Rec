@@ -42,7 +42,7 @@ Set up a virtualenv and install the [pytorch](https://pytorch.org/get-started/pr
 ```bash
 pip install -r requirements.txt
 ```
-Our experiments have been tested on **Python 3.9.12 with PyTorch 1.13.1+cu117**.
+Our experiments have been tested on **Python 3.9.12 with PyTorch 1.13.1+cu117**. Python version over 3.10 may lead to some bugs in the package 'reckit'.
 
 ### Step 2. Set up necessary environments
 Make sure you are in the directory of `recommenders/` (where `setup.py` can be found), and run the following code.
@@ -97,7 +97,7 @@ You can choose the employed recommender by modifying `--modeltype <model_name>` 
 - `Random`: Randomly recommend items to users.  
 - `Pop`: Randomly recommend popular items to users.  
 - `MF`: Pretrained [Matrix Factorization](https://ieeexplore.ieee.org/abstract/document/5197422) model with BPR loss.  
-- `MultVAE`: Pretrained [MultVAE](https://arxiv.org/abs/1802.05814) model with BPR loss.
+- `MultVAE`: Pretrained [MultVAE](https://arxiv.org/abs/1802.05814) model.
 - `LightGCN`: Pretrained [LightGCN](https://arxiv.org/abs/2002.02126) model with BPR loss.  
 
 <!-- <p id="Explore-Various-Recommenders"></p> 

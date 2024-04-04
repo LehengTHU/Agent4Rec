@@ -101,7 +101,7 @@ class abstract_arena:
         # import pickle
         # with open(f'datasets/{self.dataset}/simulation/movie_dict.pkl', 'rb') as f:
         #     self.movie_detail = pickle.load(f)
-        self.movie_detail = pd.read_csv(f'datasets/{self.dataset}/simulation/movie_detail.csv', index_col=0)
+        self.movie_detail = pd.read_csv(f'datasets/{self.dataset}/simulation/movie_detail.csv')        
 
     def load_recommender(self):
         """
